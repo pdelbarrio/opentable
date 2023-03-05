@@ -21,6 +21,7 @@ export default function SearchBar() {
         onClick={() => {
           if (location === "") return;
           router.push(`/search?city=${location}`);
+          setLocation("");
         }}
       >
         Let's go
