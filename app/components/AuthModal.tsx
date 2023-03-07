@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import AuthModalInputs from "./AuthModalInputs";
+import useAuth from "../../hooks/useAuth";
+import { AuthenticationContext } from "../context/AuthContext";
 
 const style = {
   position: "absolute" as "absolute",
@@ -20,6 +22,7 @@ export default function AuthModal({ isSignin }: { isSignin: boolean }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { signin } = useAuth();
 
   const renderContent = (signinContent: string, signupContent: string) => {
     return isSignin ? signinContent : signupContent;
@@ -64,6 +67,12 @@ export default function AuthModal({ isSignin }: { isSignin: boolean }) {
     setDisabled(true);
   }, [inputs]);
 
+  const handleClick = () => {
+    if (isSignin) {
+      signin({ email: inputs.email, password: inputs.password });
+    }
+  };
+
   return (
     <div>
       <button
@@ -84,10 +93,10 @@ export default function AuthModal({ isSignin }: { isSignin: boolean }) {
         <Box sx={style}>
           <div className="p-2 h-[600px]">
             <div className="uppercase font-bold text-center pb-2 border-b mb-2">
-              <div className="text-sm">
+              <p className="text-sm">
                 {renderContent("Sign In", "Create Account")}
                 {inputs.email}
-              </div>
+              </p>
             </div>
             <div className="m-auto">
               <h2 className="text-2xl font-light text-center">
@@ -104,6 +113,7 @@ export default function AuthModal({ isSignin }: { isSignin: boolean }) {
               <button
                 className="uppercase bg-red-600 w-full text-white font-bold p-3 rounded text-sm pb-5 disabled:bg-gray-400"
                 disabled={disabled}
+                onClick={handleClick}
               >
                 {renderContent("Sign In", "Create Account")}
               </button>
